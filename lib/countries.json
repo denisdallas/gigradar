@@ -1,0 +1,22 @@
+[
+  { "code": "HR", "name": "Croatia", "osmCode": "HR", "tedCode": "HRV" },
+  { "code": "SI", "name": "Slovenia", "osmCode": "SI", "tedCode": "SVN" },
+  { "code": "MT", "name": "Malta", "osmCode": "MT", "tedCode": "MLT" },
+  { "code": "LV", "name": "Latvia", "osmCode": "LV", "tedCode": "LVA" },
+  { "code": "LT", "name": "Lithuania", "osmCode": "LT", "tedCode": "LTU" },
+  { "code": "EE", "name": "Estonia", "osmCode": "EE", "tedCode": "EST" },
+  { "code": "SK", "name": "Slovakia", "osmCode": "SK", "tedCode": "SVK" },
+  { "code": "MK", "name": "North Macedonia", "osmCode": "MK", "tedCode": "MKD" },
+  { "code": "CY", "name": "Cyprus", "osmCode": "CY", "tedCode": "CYP" },
+  { "code": "LU", "name": "Luxembourg", "osmCode": "LU", "tedCode": "LUX" },
+  { "code": "ME", "name": "Montenegro", "osmCode": "ME", "tedCode": "MNE" },
+  { "code": "AL", "name": "Albania", "osmCode": "AL", "tedCode": "ALB" },
+  { "code": "MD", "name": "Moldova", "osmCode": "MD", "tedCode": "MDA" },
+  { "code": "BA", "name": "Bosnia and Herzegovina", "osmCode": "BA", "tedCode": "BIH" },
+  { "code": "CZ", "name": "Czechia", "osmCode": "CZ", "tedCode": "CZE" },
+  { "code": "RS", "name": "Serbia", "osmCode": "RS", "tedCode": "SRB" },
+  { "code": "BG", "name": "Bulgaria", "osmCode": "BG", "tedCode": "BGR" },
+  { "code": "RO", "name": "Romania", "osmCode": "RO", "tedCode": "ROU" },
+  { "code": "HU", "name": "Hungary", "osmCode": "HU", "tedCode": "HUN" }
+]
+

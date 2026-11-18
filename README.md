@@ -1,75 +1,55 @@
 # GigRadar
 
-GigRadar keeps two kinds of opportunity separate:
+GigRadar is a single-user, automatically refreshed workspace for relevant paid technical work and evidence-backed business prospects. It keeps confirmed paid opportunities separate from possible clients and stores the public source material used to assess each result.
 
-- **Active gigs:** explicit paid technical work or a request to hire a technical provider.
-- **Business prospects:** real organizations that may be worth approaching, with evidence from their public source.
+## What it does
 
-The dashboard scans configured public RSS or Atom feeds, deduplicates items, optionally qualifies them with Groq, stores them in SQLite, and can send high-fit notifications through ntfy. It starts empty by design; it does not invent or preload opportunities.
+- Searches current Hacker News discussions for direct technical project requests and rejects records without explicit payment evidence.
+- Searches public TED procurement notices for current technical service calls in the 19 target markets. Tender eligibility and an award are never assumed.
+- Rotates through OpenStreetMap business listings across all target markets, then checks a small number of publicly listed websites for concrete technical gaps. Website research requires public HTTPS, honors `robots.txt`, does not follow redirects, and is bounded by response size and time limits.
+- Uses Groq to assess skill fit, evidence, legitimacy, timing, and payment signals. The business lane only reports potential prospects, never confirmed paid gigs.
+- Saves source links, evidence, assessments, run history, and saved/applied/ignored status in Supabase.
+- Sends high-scoring findings to an ntfy topic when configured.
+- Runs daily at 02:00 UTC (05:00 East Africa Time), with resumable country rotation and bounded assessment batches.
+
+Target markets: Croatia, Slovenia, Malta, Latvia, Lithuania, Estonia, Slovakia, North Macedonia, Cyprus, Luxembourg, Montenegro, Albania, Moldova, Bosnia and Herzegovina, Czechia, Serbia, Bulgaria, Romania, and Hungary.
+
+## Project status
+
+The application and its automated discovery workflow are implemented here. A live scan is not considered operational until a Supabase project has the migration applied and the deployment has valid Supabase, Groq, and Cron credentials. ntfy delivery is optional. The health endpoint reports which credentials are present; a successful scan records source counts and errors in the dashboard.
+
+This is a personal workspace without app sign-in. Keep its deployment private or protected by the hosting platform. The service-role key is server-only and is never returned to the browser.
 
 ## Run locally
 
-Requirements: Node.js 24 or newer.
+Requirements: Node.js 22.12+ and pnpm 11.
 
-1. Copy `.env.example` to `.env` and replace both example keys with long random values.
-2. Start GigRadar with Node:
+```sh
+pnpm install
+Copy-Item .env.example .env.local
+pnpm dev
+```
 
-   ```sh
-   node --env-file-if-exists=.env server.mjs
-   ```
+Apply `supabase/migrations/20261118000000_initial_gigradar.sql` to the connected Supabase project before the first scan. Required server variables:
 
-3. Open [http://localhost:3000](http://localhost:3000).
-4. Add a public RSS or Atom feed, choose its category and market, and select **Scan sources**.
-
-No package installation is required. The server uses Node's built-in HTTP, SQLite, and `fetch` APIs. SQLite data is stored in `data/gig-radar.sqlite` and is excluded from Git.
-
-## Integrations
-
-| Environment variable | Purpose |
+| Variable | Purpose |
 | --- | --- |
-| `GIGRADAR_ADMIN_KEY` | Protects source management, shortlist updates, and manual scans. Required in production. |
-| `CRON_SECRET` | Separate bearer key for the scheduled discovery endpoint. Required in production. |
-| `GROQ_API_KEY` | Optional evidence-based qualification. Without it, new records remain marked for review. |
-| `GROQ_MODEL` | Optional Groq chat model ID; defaults to `llama-3.3-70b-versatile`. |
-| `NTFY_TOPIC` | Optional ntfy topic. Use a hard-to-guess topic name. |
-| `NTFY_TOKEN` | Optional ntfy bearer token for protected topics. |
-| `NTFY_MIN_SCORE` | Minimum score for a qualified item to trigger a notification; defaults to `75`. |
-| `DATABASE_FILE` | Optional path to the SQLite database; defaults to `./data/gig-radar.sqlite`. |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only database access; never prefix with `NEXT_PUBLIC_` |
+| `GROQ_API_KEY` | Evidence assessment and scoring |
+| `CRON_SECRET` | Protects the daily discovery endpoint |
 
-Keys are read only by the server. The dashboard keeps the admin key in browser session storage and sends it only to the GigRadar server. Never commit `.env` or paste keys into issue reports.
+Optional notification variables: `NTFY_TOPIC`, `NTFY_TOKEN`, and `NTFY_SERVER` (defaults to `https://ntfy.sh`). `OSM_COUNTRIES_PER_RUN`, `GROQ_BATCHES_PER_RUN`, and `NTFY_MIN_SCORE` tune the daily run.
 
-## Schedule discovery
+The health endpoint is `/api/health`. The scheduled endpoint is `/api/cron/daily-discovery` and accepts authenticated `POST` requests only. Vercel Cron invokes it at the schedule in `vercel.json`.
 
-The server exposes `POST /api/cron/discover` and checks `Authorization: Bearer <CRON_SECRET>`. The included GitHub Actions workflow runs every 15 minutes and can also be started manually. In the repository settings, add:
+## Build checks
 
-- Repository secret `GIGRADAR_BASE_URL`, set to the HTTPS base URL of your running GigRadar server.
-- Repository secret `CRON_SECRET`, matching the server's `CRON_SECRET` value.
+```sh
+pnpm typecheck
+pnpm test
+pnpm build
+```
 
-The workflow stays idle until both secrets are set. GitHub scheduled workflows run from the default branch and can be delayed during busy periods; they are best-effort scheduling, not a guaranteed real-time queue.
+GitHub Actions runs those checks on pushes and pull requests.
 
-Run GigRadar on a host that keeps a persistent filesystem for SQLite. A serverless host with an ephemeral filesystem will lose the local database when instances are replaced. Back up the database file regularly.
-
-## Feed safety and evidence
-
-- Add feeds you are permitted to access. GigRadar does not scrape login-only pages or bypass access controls.
-- Feed URLs must use HTTP or HTTPS and cannot target local/private host names or IP ranges.
-- Feed downloads have a 15-second timeout, a 4 MB size limit, at most three validated redirects, and at most 20 items per source per scan.
-- The source's chosen category remains authoritative. An accommodation provider or company is never silently reclassified as a paid gig.
-- Groq receives the item's public title, summary, category, country, and source link for qualification. Source text is treated as untrusted input.
-- AI results are evidence-based suggestions. Review the original source before applying or contacting anyone.
-
-## API overview
-
-- `GET /api/health` — server and integration readiness, without exposing keys.
-- `GET /api/meta` — supported markets and categories.
-- `GET /api/summary` — totals and latest run.
-- `GET /api/opportunities` — records; supports `kind`, `country`, `status`, `saved`, `q`, and `limit` filters.
-- `GET /api/sources` — configured feeds.
-- `POST /api/sources` — add a feed; admin bearer key required in production.
-- `PATCH /api/opportunities/:id` — shortlist or dismiss a record; admin bearer key required in production.
-- `POST /api/discover` — start a manual scan; admin bearer key required in production.
-- `POST /api/cron/discover` — scheduled scan; `CRON_SECRET` bearer key required.
-
-## Project scope
-
-The first market group is Croatia, Slovenia, Malta, Latvia, Lithuania, Estonia, Slovakia, North Macedonia, Cyprus, Luxembourg, Montenegro, Albania, Moldova, and Bosnia and Herzegovina. The second group is Czechia, Serbia, Bulgaria, Romania, and Hungary. The interface can filter all 19 markets. Sources are added explicitly so each one can be reviewed for access rules, usefulness, and country coverage.

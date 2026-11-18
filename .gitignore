@@ -5,5 +5,11 @@ data/*.sqlite
 data/*.sqlite-shm
 data/*.sqlite-wal
 node_modules/
+.next/
+.vercel/
+coverage/
+*.tsbuildinfo
 .DS_Store
 npm-debug.log*
+pnpm-debug.log*
+
