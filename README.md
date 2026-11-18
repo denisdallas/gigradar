@@ -74,4 +74,3 @@ Run GigRadar on a host that keeps a persistent filesystem for SQLite. A serverle
 ## Project scope
 
 The first market group is Croatia, Slovenia, Malta, Latvia, Lithuania, Estonia, Slovakia, North Macedonia, Cyprus, Luxembourg, Montenegro, Albania, Moldova, and Bosnia and Herzegovina. The second group is Czechia, Serbia, Bulgaria, Romania, and Hungary. The interface can filter all 19 markets. Sources are added explicitly so each one can be reviewed for access rules, usefulness, and country coverage.
-

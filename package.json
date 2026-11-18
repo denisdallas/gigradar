@@ -1,0 +1,14 @@
+{
+  "name": "gig-radar",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A personal radar for paid technical gigs and evidence-backed business prospects.",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "dev": "node --watch --env-file-if-exists=.env server.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

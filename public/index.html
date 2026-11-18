@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8f7f4">
+    <meta name="description" content="A clear view of technical gigs and business prospects worth pursuing.">
+    <title>GigRadar — Find your next opportunity</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/extras.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="GigRadar home">
+          <span class="brand-mark"><svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15"/><circle cx="21" cy="21" r="8"/><path d="M21 21 34 8M29 8h5v5"/></svg></span>
+          <span class="brand-name">gig<span>radar</span></span>
+        </a>
+        <div class="side-caption">WORKSPACE</div>
+        <nav class="side-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="all"><span class="nav-icon">◉</span> Overview <span class="nav-count" id="all-count">0</span></button>
+          <button class="nav-item" data-view="active_gig"><span class="nav-icon">↗</span> Active gigs <span class="nav-count" id="gig-count">0</span></button>
+          <button class="nav-item" data-view="business_prospect"><span class="nav-icon">⌂</span> Business prospects <span class="nav-count" id="prospect-count">0</span></button>
+          <button class="nav-item" data-view="shortlisted"><span class="nav-icon">☆</span> Shortlisted <span class="nav-count" id="saved-count">0</span></button>
+        </nav>
+        <div class="side-caption country-caption">MARKETS</div>
+        <div class="country-list" id="country-list"></div>
+        <div class="sidebar-bottom">
+          <div class="connection-card">
+            <span class="connection-dot" id="connection-dot"></span>
+            <div><strong id="connection-title">Starting up</strong><small id="connection-copy">Checking integrations</small></div>
+            <button class="icon-button small" id="settings-button" aria-label="Connection settings" title="Connection settings">•••</button>
+          </div>
+          <div class="profile-row">
+            <div class="avatar">DD</div><div class="profile-copy"><strong>My workspace</strong><small>Personal radar</small></div>
+            <span class="profile-more">⌄</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumb-current">Overview</strong></div>
+          <div class="top-actions"><span class="last-run" id="last-run"><i></i> No run yet</span><button class="button button-dark" id="sync-button"><span class="sync-glyph">↻</span> Scan sources</button></div>
+        </header>
+
+        <section class="page-intro">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR OPPORTUNITY RADAR <span class="eyebrow-line"></span></div>
+            <h1>Good work is <em>out there.</em></h1>
+            <p class="intro-copy">A focused view of technical work to win and businesses worth knowing.</p>
+          </div>
+          <div class="date-pill"><span class="date-icon">◷</span><span id="today-date">Today</span></div>
+        </section>
+
+        <section class="stats-grid" aria-label="Opportunity summary">
+          <article class="stat-card"><div class="stat-top"><span>Open opportunities</span><span class="stat-icon green">↗</span></div><div class="stat-value" id="stat-total">0</div><div class="stat-foot">Across both discovery engines</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Active gigs</span><span class="stat-icon blue">⌁</span></div><div class="stat-value" id="stat-gigs">0</div><div class="stat-foot">Explicit paid technical work</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Business prospects</span><span class="stat-icon amber">⌂</span></div><div class="stat-value" id="stat-prospects">0</div><div class="stat-foot">Evidence-backed potential clients</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Need a look</span><span class="stat-icon coral">◷</span></div><div class="stat-value" id="stat-review">0</div><div class="stat-foot">Pending or unclear qualification</div></article>
+        </section>
+
+        <section class="focus-banner">
+          <div class="focus-mark"><svg viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="13"/><circle cx="19" cy="19" r="6"/><path d="M19 19 31 7M27 7h4v4"/></svg></div>
+          <div class="focus-copy"><strong>Two engines. One clear direction.</strong><span>Paid gigs and potential clients stay separate, so you can act on the right signal.</span></div>
+          <div class="engine-pills"><span><i class="mini-dot blue-dot"></i> Active gigs</span><span><i class="mini-dot amber-dot"></i> Business prospects</span></div>
+        </section>
+
+        <section class="opportunities-section">
+          <div class="section-heading"><div><div class="eyebrow small-eyebrow">THE RADAR</div><h2 id="list-heading">Latest opportunities <span class="heading-count" id="result-count">0</span></h2></div>
+            <button class="button button-outline" id="add-source-button"><span class="plus">+</span> Add a source</button>
+          </div>
+          <div class="list-controls">
+            <div class="view-tabs" role="tablist" aria-label="Opportunity category">
+              <button class="view-tab selected" data-filter="all" role="tab" aria-selected="true">All <span id="tab-all">0</span></button>
+              <button class="view-tab" data-filter="active_gig" role="tab" aria-selected="false">Active gigs <span id="tab-gigs">0</span></button>
+              <button class="view-tab" data-filter="business_prospect" role="tab" aria-selected="false">Business prospects <span id="tab-prospects">0</span></button>
+            </div>
+            <div class="filter-tools"><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Search opportunities" aria-label="Search opportunities"></label>
+              <select id="country-filter" aria-label="Filter by country"><option value="">All countries</option></select>
+              <select id="sort-filter" aria-label="Sort opportunities"><option value="score">Best fit</option><option value="recent">Most recent</option></select>
+            </div>
+          </div>
+          <div class="opportunity-list" id="opportunity-list" aria-live="polite"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <div class="empty-orbit"><span>⌕</span><i></i><b></b></div>
+            <h3>Your radar is ready.</h3><p>Add a permitted RSS feed, then scan it for real opportunities. Nothing is fabricated or preloaded.</p>
+            <button class="button button-dark" id="empty-add-source">Add your first source <span>→</span></button>
+          </div>
+        </section>
+
+        <footer class="page-footer"><span>GIGRADAR <span class="footer-separator">·</span> FIND THE SIGNAL</span><span>Evidence first. Good work next.</span></footer>
+      </main>
+    </div>
+
+    <dialog class="modal" id="source-modal">
+      <form id="source-form" method="dialog" class="modal-card">
+        <div class="modal-head"><div><div class="eyebrow small-eyebrow">CONNECT A SOURCE</div><h2>Add an RSS feed</h2></div><button type="button" class="icon-button" data-close="source-modal" aria-label="Close dialog">×</button></div>
+        <p class="modal-copy">Only add public feeds you are allowed to use. The source category stays fixed during qualification.</p>
+        <label class="field-label">Source name<input required name="name" maxlength="100" placeholder="e.g. Public procurement feed"></label>
+        <label class="field-label">RSS or Atom feed URL<input required name="feed_url" type="url" placeholder="https://example.org/feed.xml"></label>
+        <div class="field-row"><label class="field-label">Discovery engine<select required name="kind"><option value="active_gig">Active gigs</option><option value="business_prospect">Business prospects</option></select></label>
+          <label class="field-label">Market<select required name="country" id="source-country"></select></label></div>
+        <label class="field-label key-field">Admin key <span class="optional-label">optional in local mode</span><input name="admin_key" type="password" autocomplete="off" placeholder="Required when configured"></label>
+        <div class="form-error" id="source-error" role="alert"></div>
+        <div class="modal-actions"><button class="button button-outline" type="button" data-close="source-modal">Cancel</button><button class="button button-dark" type="submit">Save source <span>→</span></button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="settings-modal">
+      <div class="modal-card"><div class="modal-head"><div><div class="eyebrow small-eyebrow">CONNECTIONS</div><h2>Radar settings</h2></div><button type="button" class="icon-button" data-close="settings-modal" aria-label="Close dialog">×</button></div>
+        <p class="modal-copy">Keys are kept for this browser session only. They are sent only to this GigRadar server.</p>
+        <label class="field-label">Admin key<input id="settings-admin-key" type="password" autocomplete="off" placeholder="Dashboard write key"></label>
+        <div class="integration-list" id="integration-list"></div>
+        <div class="modal-actions"><button class="button button-outline" id="clear-key" type="button">Clear session key</button><button class="button button-dark" id="save-key" type="button">Save for this session</button></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
