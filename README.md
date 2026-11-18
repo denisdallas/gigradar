@@ -66,7 +66,6 @@ Run GigRadar on a host that keeps a persistent filesystem for SQLite. A serverle
 - `GET /api/opportunities` — records; supports `kind`, `country`, `status`, `saved`, `q`, and `limit` filters.
 - `GET /api/sources` — configured feeds.
 - `POST /api/sources` — add a feed; admin bearer key required in production.
-- `DELETE /api/sources/:id` — remove a feed and its records; admin bearer key required in production.
 - `PATCH /api/opportunities/:id` — shortlist or dismiss a record; admin bearer key required in production.
 - `POST /api/discover` — start a manual scan; admin bearer key required in production.
 - `POST /api/cron/discover` — scheduled scan; `CRON_SECRET` bearer key required.
