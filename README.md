@@ -53,3 +53,6 @@ pnpm build
 
 GitHub Actions runs those checks on pushes and pull requests.
 
+## License
+
+MIT — see [LICENSE](LICENSE).
